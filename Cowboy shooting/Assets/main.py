@@ -37,6 +37,33 @@ class Player(pygame.sprite.Sprite):
             self.rect.y-=PLAYER_SPEED
         if keys[self.controls["down"]]:
             self.rect.y+=PLAYER_SPEED
+        self.rect.top = max(0,self.rect.top)
+        self.rect.bottom = min(HEIGHT,self.rect.bottom)
+        if self.side == "left":
+            self.rect.left = max(0,self.rect.left)
+            self.rect.right = min(divider.left,self.rect.right)
+        else:
+            self.rect.left = max(divider.right,self.rect.left)
+            self.rect.right = min(WIDTH,self.rect.right)
+
+    def shoot(self):
+        pass
+
+
+class Bullets(pygame.sprite.Sprite):
+    def __init__(self,x,y,direction):
+        super().__init__()
+        self.image = pygame.Surface((12,6))
+        self.image.fill("yellow")
+        self.rect = self.image.get_rect(centre = (x,y))
+        self.direction = direction
+
+    def update(self):
+        self.rect.x = self.rect.x + BULLET_SPEED * self.direction
+        if self.rect.right < 0 or self.rect.left > WIDTH:
+            self.kill()
+
+
     
 
 player_1 = Player(25,400,"Assets/Cowboy_Left.png",{"left":pygame.K_a,"right":pygame.K_d,"up":pygame.K_w,"down":pygame.K_s},"left")
